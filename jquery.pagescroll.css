@@ -1,0 +1,128 @@
+.onepage-wrapper {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    /*overflow: hidden;*/
+
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    /* For some Androids */
+    -webkit-tap-highlight-color: transparent;
+
+    /*-webkit-transform-style: preserve-3d;*/
+}
+.onepage-wrapper body {
+    height: 100%;
+}
+.onepage-wrapper .wrapper {
+  will-change: transform;
+  /* edge ie11 ie10 浏览器上的触摸事件 */
+  -ms-touch-action: none;
+  touch-action: none
+}
+
+.onepage-wrapper .back-top {
+    display: none;
+}
+
+.hidden {
+    overflow: hidden;
+}
+
+.vertical-hidden {
+    overflow-y: hidden;
+}
+
+/* onapage side pagination */
+.onepage-pagination {
+    opacity: 1;
+    position: fixed;
+    /* 距离右上角，左右相等 */
+    right: 40px;
+    top: 93px;
+    z-index: 10;
+
+    -webkit-transition: opacity 0.3s ease-out;
+    transition: opacity 0.3s ease-out;
+}
+.onepage-pagination.hidden {
+    opacity: 0;
+    top: -9999px;
+
+    -webkit-transition: opacity 0.3s ease-out, top 0s linear 0.5s;
+    transition: opacity 0.3s ease-out, top 0s linear 0.5s;
+}
+.onepage-pagination li {
+    cursor: pointer;
+    height: 10px;
+    padding: 7px 0;
+    width: 10px;
+    position: relative;
+}
+.onepage-pagination li .outer-ring {
+    border: 1px #CACACA solid;
+    border-radius: 50%;
+    display: block;
+    height: 8px;
+    width: 8px;
+    opacity: 0;
+    -ms-transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+
+    -webkit-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+.onepage-pagination li.active .outer-ring {
+    opacity: 1;
+    -ms-transform: scale(1);
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+.onepage-pagination li .inner-ring {
+    background: #6c6c6c;
+    border-radius: 50%;
+    height: 6px;
+    width: 6px;
+    opacity: .6;
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+
+    -webkit-transition: opacity .3s ease-out;
+    transition: opacity .3s ease-out;
+}
+.onepage-pagination li:hover .inner-ring {
+    opacity: 1;
+}
+.onepage-pagination li:active .inner-ring,
+.onepage-pagination li.active .inner-ring { 
+    opacity: 0;
+}
+.onepage-pagination li .page-title {
+    color: #6c6c6c;
+    text-align: right;
+    opacity: 0;
+    white-space: nowrap;
+    padding: 0 15px 0 0;
+    position: absolute;
+    right: 0;
+    top: 2px;
+
+    -webkit-transition: opacity 0.1s ease-out;
+    transition: opacity 0.1s ease-out;
+}
+.onepage-pagination li:hover .page-title {
+    opacity: 1;
+}
+
+@media screen and (max-width: 736px) and (max-height: 736px) {
+    .onepage-pagination {
+        right: 24px;
+    }
+    .onepage-pagination li .page-title {
+        display: none;
+    }
+}
