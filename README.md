@@ -1,6 +1,6 @@
 原文链接： [PageScroll 研究](http://www.xiaoxili.com/2015/05/26/pagescroll-study/)
 
-DEMO： [坚果手机](https://www.smartisan.com/jianguo/) [Smartisan T2](https://www.smartisan.com/t2/)
+PC浏览器上DEMO： [坚果手机](https://www.smartisan.com/jianguo/) [Smartisan T2](https://www.smartisan.com/t2/)
 
 
 
@@ -14,7 +14,7 @@ DEMO： [坚果手机](https://www.smartisan.com/jianguo/) [Smartisan T2](https:
 * 单页/全屏滚动（借鉴）
  * 支持鼠标滚轮、空格键、上下方向键、上下翻页键、上下滑动
  * 在PC和ipad上支持 **响应式** 操作
- * 在Mobile上支持竖屏滚动，横屏正常拖动，支持页面 Resize检测
+ * 在Mobile上支持竖屏滚动，横屏正常拖动，支持页面 Resize 检测
 * 支持 header、footer、topSlideNav、pagination
 * 手指跟随(未加入阻尼)
 * 页面回弹(有阻尼)
@@ -41,14 +41,14 @@ transform: translate3d(0, 100%, 0)
 ### 是否兼容IE9-
 > IE9-指的是不支持translate3d的Internet Explorer，包含ie6、ie7、ie8、ie9.
 
->```
+``` js
 //onepage-scroll 1.3.1
 if($('html').hasClass('ie8')) { }
->```
+```
 
 在 `onepage-scroll 1.3.1 ` 中有对 IE9- 的支持，但考虑到pagescroll使用了 `translate3d` 这么高大上的方式，并且在 IE9- 上表现效果也不好，在经过反复考虑后决定先不支持 IE9-。在IE8、IE9 上再做单独处理吧。
 
-> modernizr.transforms3d.js
+> modernizr.transforms3d.js  
 > 判断浏览器所能支持的特性，本插件所使用的modernizr 2.8.3使用定制版本
 > 网址：http://modernizr.com/download/#-csstransforms3d-shiv-cssclasses-teststyles-testprop-testallprops-prefixes-domprefixes-load
 > 在 IE10+ 、Chrome 、Safari 、Firefox 等浏览器上支持 csstransforms3d，才可以使用pagescroll
@@ -59,7 +59,8 @@ if($('html').hasClass('ie8')) { }
 ### 各大浏览器的具体表现如何？
 
 在 Safari 浏览器和 Smartisan T1 自带浏览器上，如果页面高度超过了浏览器内容高度的话，在上下滑动时，浏览器的标题栏、工具栏都可能会消失，那这时候会影响到页面滚屏的效果。但在 pagescroll 不会出现这个问题。
-```
+
+```css
 html.onepage-wrapper, html.onepage-wrapper body {
   margin: 0;
   height: 100%;
@@ -85,16 +86,21 @@ pagescroll 主要是针对 `swipeEvents` 进行了扩展。在 onepage-scroll �
 ### 慢速滑动和快速滑动
 
 **慢速滑动**
+
 1. touchStart 中记录 `startY`
 2. touchMove 中算出 `endY(startY - touches[0].pageY)`
 3. 在 touchEnd 中判断 `endY` 是否超过 50。若超过50，将 `trigger` 了 `swipe` 事件(包含up、down、left、right)。
 
+
 **快速滑动**
+
 1. touchStart 中记录 `startTime`
 2. touchEnd 中记录 `endTime`， 并判断时间间隔 `quickSwipeTime = (endTime - startTime) < 300;`
 3. 在 touchEnd 中判断时间间隔是否小于 300ms。若小于300ms，将 `trigger` 了 `swipe` 事件(包含up、down、left、right)。
 
-```
+
+
+```js
 var endTime = new Date().getTime();
 var quickSwipeTime = (endTime - startTime) < 300;
 if (endX >= 50 || (endX > 14 quickSwipeTime&& )) {
@@ -112,7 +118,8 @@ if (endY >= 50 || (endY > 14 && quickSwipeTime)) {
 #### bug处理——卡在标题栏
 
 在ipad和iPhone上滑到微信标题栏时，此时并不会 `touchEnd`，此时页面会卡在页面上。pagescroll 会 `touches[0].pageY` 是否小于 0，然后让其触发 `doSwipe()`
-```
+
+```js
 if (touches[0].pageY < 0 || startY >= windowHeight - 10 ) {
 // 触发滑动或页面回弹
 doSwipe();
@@ -138,7 +145,7 @@ doSwipe();
 
 ### 附上 swipeEvents 代码
 
-```
+``` js
 $.fn.swipeEvents = function() {
     return this.each(function () {
 
@@ -320,7 +327,7 @@ var touchHandler = {
 
 `doScroll()` 完成了滚动屏幕的核心功能。
 
-```
+```js
 var isRunning = false;
 
 function doScroll(delta) {
@@ -357,7 +364,7 @@ function doScroll(delta) {
 ### transformPage()
 `transformPage` 完成了页面切换的功能，其中提供了 `beforeMove` 和 `afterMove` 功能。
 
-```
+```js
 // 切换页面
 $.fn.transformPage = function(settings, pos, index, delta) {
 
@@ -379,7 +386,8 @@ $.fn.transformPage = function(settings, pos, index, delta) {
 ```
 ### mouseWheelHandle()
 `mouseWheelHandle()`  可以将滑动、鼠标及键盘统一到一起，来完成 `doScroll()` 的页面操作。
-```
+
+```js
 var mouseWheelHandle = function (event, delta) {
     event.preventDefault();
 
@@ -402,7 +410,7 @@ var mouseWheelHandle = function (event, delta) {
 ### changeSectionPosition() 
 `changeSectionPosition()`  完成页面平移，包含页面滚动、手指跟随、页面回弹。
 
-```
+```js
 function changeSectionPosition(top, time, easing) {
     el.css({
         '-webkit-transform': 'translate3d(0, ' + top + 'px, 0)',
@@ -428,20 +436,30 @@ function changeSectionPosition(top, time, easing) {
 * `endTop` 执行动画后页面的位置
 
 ### 功能函数
+
 init() 提供了的进入方法
-```
+
+```js
 // 执行一次  在ie10+、chrome、Safari、Firefox等浏览器上使用page scroll
 if ($('html').hasClass('csstransforms3d')) {
     // 启动本函数
     init();
 }
 ```
-pagination 对页码进行处理
-page 对每一个单页做处理
-subNav 对`header-nav-slide` 进行处理
-updateIndex() 对 `endIndex` 进行处理
-updateTop() 对 `endTop` 进行处理
+* pagination 对页码进行处理
+* page 对每一个单页做处理
+* subNav 对`header-nav-slide` 进行处理
+* updateIndex() 对 `endIndex` 进行处理
+* updateTop() 对 `endTop` 进行处理
 
-附上单页案例
-https://github.com/yanhaijing/zepto.fullpage/issues/21
+## 参考文献
+- [fullPage.js](https://github.com/alvarotrigo/fullPage.js)
+- [onepage-scroll](https://github.com/peachananr/onepage-scroll)
+- [zepto-onepage-scroll](https://github.com/peachananr/zepto-onepage-scroll)
+- [parallax.js](https://github.com/hahnzhu/parallax.js)
+- [H5FullscreenPage](https://github.com/lvming6816077/H5FullscreenPage)
+- [fullpage](https://github.com/powy1993/fullpage)
+- [vue-fullpage](https://github.com/wendaosanshou/vue-fullpage)
+
+
 
